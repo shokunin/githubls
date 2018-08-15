@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
@@ -10,6 +11,9 @@ import (
 )
 
 func main() {
+
+	githubOrg := flag.String("org", "", "Github Organization Name")
+	flag.Parse()
 
 	ctx := context.Background()
 
@@ -21,14 +25,37 @@ func main() {
 
 	client := github.NewClient(tc)
 
-	repos, _, err := client.Repositories.List(ctx, "", nil)
-
-	if err != nil {
-		log.Fatal(err)
+	opt := &github.RepositoryListByOrgOptions{
+		ListOptions: github.ListOptions{PerPage: 20},
 	}
 
-	for i, repo := range repos {
-		fmt.Println(i)
-		fmt.Println(repo)
+	// check env var
+	if os.Getenv("GITHUB_TOKEN") == "" {
+		fmt.Println("Please set the GITHUB_TOKEN environment variable")
+		os.Exit(1)
+	}
+
+	// check organization set
+	if *githubOrg == "" {
+		fmt.Println("Please see usage: githubls -h")
+		os.Exit(1)
+	}
+
+	// get all pages of results
+	var allRepos []*github.Repository
+	for {
+		repos, resp, err := client.Repositories.ListByOrg(ctx, *githubOrg, opt)
+		if err != nil {
+			log.Fatal(err)
+		}
+		allRepos = append(allRepos, repos...)
+		if resp.NextPage == 0 {
+			break
+		}
+		opt.Page = resp.NextPage
+	}
+
+	for _, repo := range allRepos {
+		fmt.Println(*repo.Name)
 	}
 }
