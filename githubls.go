@@ -8,11 +8,13 @@ import (
 	"golang.org/x/oauth2"
 	"log"
 	"os"
+	"regexp"
 )
 
 func main() {
 
 	githubOrg := flag.String("org", "", "Github Organization Name")
+	regex := flag.String("regex", "", "regular expression")
 	flag.Parse()
 
 	ctx := context.Background()
@@ -56,6 +58,13 @@ func main() {
 	}
 
 	for _, repo := range allRepos {
-		fmt.Println(*repo.Name)
+		if *regex == "" {
+			fmt.Println(*repo.Name)
+		} else {
+			matched, _ := regexp.MatchString(*regex, *repo.Name)
+			if matched {
+				fmt.Println(*repo.Name)
+			}
+		}
 	}
 }
