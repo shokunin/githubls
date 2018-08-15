@@ -24,7 +24,7 @@ export GITHUB_TOKEN=98cfzfd8f5f2fz835275z292679f2ed6e3zqdf13
 ### Get all repos in an organization
 
 ```
-$ ./githubls -org shokunin  |head
+$ ./githubls -org shokunin 
 ops_scripts
 ec2secviz
 zero_ipstream
