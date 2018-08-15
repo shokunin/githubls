@@ -28,9 +28,7 @@ func main() {
 
 	client := github.NewClient(tc)
 
-	opt := &github.RepositoryListByOrgOptions{
-		ListOptions: github.ListOptions{PerPage: 20},
-	}
+	opt := &github.RepositoryListByOrgOptions{ListOptions: github.ListOptions{PerPage: 20}}
 
 	// check env var
 	if os.Getenv("GITHUB_TOKEN") == "" {

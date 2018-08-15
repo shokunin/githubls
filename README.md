@@ -10,8 +10,8 @@ Go to https://github.com/settings/tokens and create a new Personal access token
 
 Only the following permissions are necessary:
 
-- repo:status
-- public_repo
+- repo(all)
+- amin:org => read:org
 
 ## Usage
 
