@@ -15,6 +15,7 @@ func main() {
 
 	githubOrg := flag.String("org", "", "Github Organization Name")
 	regex := flag.String("regex", "", "regular expression")
+	puborgs := flag.String("list-public-orgs", "", "List the orgs in which user is a member")
 	flag.Parse()
 
 	ctx := context.Background()
@@ -35,6 +36,17 @@ func main() {
 	if os.Getenv("GITHUB_TOKEN") == "" {
 		fmt.Println("Please set the GITHUB_TOKEN environment variable")
 		os.Exit(1)
+	}
+
+	if *puborgs != "" {
+		orgs, _, err := client.Organizations.List(ctx, *puborgs, nil)
+		if err != nil {
+			log.Fatal(err)
+		}
+		for _, org := range orgs {
+			fmt.Println(*org.Login)
+		}
+		os.Exit(0)
 	}
 
 	// check organization set
