@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [ ! -d ${1}/${2} ]; then
+	echo "creating dir ${1}/${2}"
+	mkdir -p  ${1}/${2}
+fi
+
+cd ${1}/${2}
+
+for repo in `githubls -org $2 -regex $3`; do
+	if [ ! -d $repo ] ; then
+		echo "########## Cloning ${repo}"
+		git clone git@github.com:${2}/${repo}.git > /dev/null
+	else
+		echo "########## Updating ${repo}"
+		cd $repo
+		git pull
+		cd ..
+	fi
+done       

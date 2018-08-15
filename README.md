@@ -46,6 +46,15 @@ google
 ruby-foo
 ```
 
+### Slurping repos from an organization
+
+1) copy githubls somewhere in your path
+2) run the  check_em_all script
+```
+./check_em_all  ~/Code shokunin "."
+```
+This will check out all repos in the shokunin organization to ~/Code/shokunin and keep them up to date
+
 ## Building
 
 ```
