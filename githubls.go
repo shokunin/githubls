@@ -16,6 +16,7 @@ func main() {
 	githubOrg := flag.String("org", "", "Github Organization Name")
 	regex := flag.String("regex", "", "regular expression")
 	puborgs := flag.String("list-public-orgs", "", "List the orgs in which user is a member")
+	isArchived := flag.Bool("display-archived", false, "List the repos that are archived")
 	flag.Parse()
 
 	ctx := context.Background()
@@ -69,11 +70,15 @@ func main() {
 
 	for _, repo := range allRepos {
 		if *regex == "" {
-			fmt.Println(*repo.Name)
+			if !(*repo.Archived || *isArchived) {
+				fmt.Println(*repo.Name)
+			}
 		} else {
 			matched, _ := regexp.MatchString(*regex, *repo.Name)
 			if matched {
-				fmt.Println(*repo.Name)
+				if !(*repo.Archived || *isArchived) {
+					fmt.Println(*repo.Name)
+				}
 			}
 		}
 	}
